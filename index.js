@@ -1,21 +1,26 @@
-import express from "express";
-import connectdb from "./config/connectdb.js";
-import dotenv from "dotenv";
-import useroutes from "./routes/useroutes.js"
-import cors from "cors"
+import dotenv from 'dotenv'
 dotenv.config()
-const app = express();
-const port = process.env.PORT;
-app.use(cors());
+import express from 'express'
+import cors from 'cors';
+import connectDB from './config/connectdb.js'
+import userRoutes from './routes/useroutes.js'
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-});
-connectdb();
+const app = express()
+const port = process.env.PORT
+const DATABASE_URL = process.env.DATABASE_URL
 
-//load
-app.use('/api/user',useroutes)
-app.use(express.json());
+// CORS Policy
+app.use(cors())
+
+// Database Connection
+connectDB(DATABASE_URL)
+
+// JSON
+app.use(express.json())
+
+// Load Routes
+app.use("/api/user", userRoutes)
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+  console.log(`Server listening at http://localhost:${port}`)
+})
